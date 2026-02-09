@@ -1,237 +1,325 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>💖 Valentine 💖</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>💖 Valentine 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-* {
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(#ffd1dc, #ffe6eb);
+      font-family: "Poppins", sans-serif;
+    }
 
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(#ffd1dc, #ffe6eb);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
+    .screen { display: none; text-align: center; padding: 24px; }
+    .screen.active { display: block; }
 
-/* SCREENS */
-.screen {
-  display: none;
-  text-align: center;
-}
-.screen.active {
-  display: block;
-}
+    /* Envelope heart-ish */
+    .envelopeWrap { position: relative; width: 240px; height: 240px; }
+    .envelopeHeart {
+      width: 220px; height: 220px;
+      margin: 0 auto;
+      background: #ffb3c1;
+      border-radius: 18px;
+      position: relative;
+      transform: rotate(45deg);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.18);
+    }
+    .envelopeHeart:before,
+    .envelopeHeart:after{
+      content:"";
+      position:absolute;
+      width: 220px; height: 220px;
+      background:#ffb3c1;
+      border-radius: 50%;
+    }
+    .envelopeHeart:before { top: -110px; left: 0; }
+    .envelopeHeart:after { left: -110px; top: 0; }
 
-/* ENVELOPPE */
-.envelope {
-  width: 200px;
-  height: 200px;
-  background: pink;
-  border-radius: 50%;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
+    .openBtn {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 140px;
+      height: 44px;
+      border: none;
+      border-radius: 999px;
+      background: #ff4d6d;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(255,77,109,0.35);
+      transition: transform .15s ease;
+    }
+    .openBtn:hover { transform: scale(1.05); }
 
-.envelope button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 12px 20px;
-  border: none;
-  border-radius: 30px;
-  background: #ff4d6d;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
+    h1 {
+      font-family: "Dancing Script", cursive;
+      font-size: clamp(34px, 4vw, 52px);
+      color: #b3003c;
+      margin: 0;
+      line-height: 1.15;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.35);
+    }
 
-/* QUESTION */
-h1 {
-  font-family: 'Dancing Script', cursive;
-  font-size: 42px;
-  color: #b3003c;
-}
+    .buttons { margin-top: 22px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      padding: 14px 22px;
+      font-size: 16px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform .15s ease, box-shadow .15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    #yesBtn { background: #ff4d6d; color: white; box-shadow: 0 10px 20px rgba(255,77,109,0.25); }
+    #noBtn  { background: #e6e6e6; color: #333; box-shadow: 0 10px 20px rgba(0,0,0,0.10); position: absolute; }
 
-.buttons {
-  margin-top: 30px;
-}
+    /* Sad emoji that grows */
+    #sadFace {
+      position: fixed;
+      left: 50%;
+      top: 58%;
+      transform: translate(-50%, -50%) scale(0.6);
+      font-size: 64px;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .15s ease, opacity .15s ease;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.15));
+      z-index: 50;
+    }
 
-.buttons button {
-  padding: 15px 25px;
-  margin: 10px;
-  font-size: 18px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-}
+    /* Final screen */
+    .bear { font-size: 120px; margin-top: 6px; }
+    #loveBtn {
+      margin-top: 18px;
+      padding: 14px 26px;
+      font-size: 18px;
+      border-radius: 999px;
+      border: none;
+      background: #ff4d6d;
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .2s ease, box-shadow .2s ease;
+      box-shadow: 0 10px 20px rgba(255,77,109,0.25);
+    }
+    #loveBtn.glow {
+      transform: scale(1.15);
+      box-shadow: 0 0 28px rgba(255,77,109,0.6);
+    }
+    #loveMessage {
+      margin-top: 14px;
+      font-size: 26px;
+      color: #b3003c;
+      display: none;
+      font-family: "Dancing Script", cursive;
+    }
 
-#yesBtn {
-  background: #ff4d6d;
-  color: white;
-}
+    /* Falling hearts */
+    .falling-heart {
+      position: fixed;
+      top: -24px;
+      font-size: 18px;
+      opacity: 0.9;
+      animation: fall linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes fall {
+      to { transform: translateY(112vh); opacity: 0; }
+    }
 
-#noBtn {
-  background: #ccc;
-  position: absolute;
-}
-
-/* FINAL */
-.bear {
-  font-size: 120px;
-}
-
-#loveBtn {
-  margin-top: 20px;
-  padding: 15px 30px;
-  font-size: 20px;
-  border-radius: 40px;
-  border: none;
-  background: #ff4d6d;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-#loveBtn.glow {
-  transform: scale(1.2);
-  box-shadow: 0 0 25px pink;
-}
-
-#loveMessage {
-  margin-top: 15px;
-  font-size: 28px;
-  color: #b3003c;
-  display: none;
-}
-
-/* FALLING HEARTS */
-.falling-heart {
-  position: fixed;
-  top: -20px;
-  color: pink;
-  font-size: 20px;
-  animation: fall linear infinite;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(110vh);
-    opacity: 0;
-  }
-}
-
-/* EXPLOSION HEARTS */
-.explosion-heart {
-  position: absolute;
-  color: red;
-  animation: explode 1s forwards;
-}
-
-@keyframes explode {
-  to {
-    transform: translate(var(--x), var(--y)) scale(0);
-    opacity: 0;
-  }
-}
-</style>
+    /* Explosion hearts */
+    .explosion-heart {
+      position: fixed;
+      font-size: 18px;
+      animation: explode 1s forwards;
+      pointer-events: none;
+      z-index: 60;
+    }
+    @keyframes explode {
+      to { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- SCREEN 1 -->
-<div id="screen1" class="screen active">
-  <div class="envelope">
-    <button onclick="openEnvelope()">Open me</button>
-  </div>
-</div>
+  <!-- Sad emoji overlay -->
+  <div id="sadFace">😞</div>
 
-<!-- SCREEN 2 -->
-<div id="screen2" class="screen">
-  <h1>Romayssa, veux-tu être ma Valentine ? ❤️</h1>
-  <div class="buttons">
-    <button id="yesBtn" onclick="accept()">Oui, avec plaisir</button>
-    <button id="noBtn">Non, j'ai autre chose à faire</button>
+  <!-- SCREEN 1 -->
+  <div id="screen1" class="screen active">
+    <div class="envelopeWrap" aria-label="enveloppe">
+      <div class="envelopeHeart"></div>
+      <button class="openBtn" id="openBtn">Open me</button>
+    </div>
   </div>
-</div>
 
-<!-- SCREEN 3 -->
-<div id="screen3" class="screen">
-  <div class="bear">🧸❤️</div>
-  <h1>T'avais pas le choix façon 😌❤️</h1>
-  <button id="loveBtn">Je t’aime ❤️</button>
-  <div id="loveMessage">Moi aussi, pour toujours 💞</div>
-</div>
+  <!-- SCREEN 2 -->
+  <div id="screen2" class="screen">
+    <h1>Romayssa, veux-tu être ma Valentine ? ❤️</h1>
+    <div class="buttons">
+      <button class="btn" id="yesBtn">Oui, avec plaisir</button>
+      <button class="btn" id="noBtn">Non, j'ai autre chose à faire</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 -->
+  <div id="screen3" class="screen">
+    <div class="bear">🧸❤️</div>
+    <h1>T'avais pas le choix façon 😌❤️</h1>
+    <button id="loveBtn">Je t’aime ❤️</button>
+    <div id="loveMessage">Moi aussi, pour toujours 💞</div>
+  </div>
 
 <script>
-const screen1 = document.getElementById("screen1");
-const screen2 = document.getElementById("screen2");
-const screen3 = document.getElementById("screen3");
-const noBtn = document.getElementById("noBtn");
-const loveBtn = document.getElementById("loveBtn");
-const loveMessage = document.getElementById("loveMessage");
+  const screen1 = document.getElementById("screen1");
+  const screen2 = document.getElementById("screen2");
+  const screen3 = document.getElementById("screen3");
 
-function openEnvelope() {
-  screen1.classList.remove("active");
-  screen2.classList.add("active");
-}
+  const openBtn = document.getElementById("openBtn");
+  const yesBtn  = document.getElementById("yesBtn");
+  const noBtn   = document.getElementById("noBtn");
 
-noBtn.addEventListener("mouseenter", () => {
-  const x = Math.random() * (window.innerWidth - 150);
-  const y = Math.random() * (window.innerHeight - 50);
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-});
+  const sadFace = document.getElementById("sadFace");
 
-function accept() {
-  screen2.classList.remove("active");
-  screen3.classList.add("active");
-  startFallingHearts();
-}
+  const loveBtn = document.getElementById("loveBtn");
+  const loveMessage = document.getElementById("loveMessage");
 
-loveBtn.addEventListener("click", () => {
-  loveBtn.classList.add("glow");
-  loveMessage.style.display = "block";
-  explodeHearts(loveBtn);
-});
+  let noAttempts = 0;
+  let heartsInterval = null;
 
-function startFallingHearts() {
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "falling-heart";
-    heart.innerText = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = 2 + Math.random() * 3 + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
-  }, 300);
-}
-
-function explodeHearts(btn) {
-  for (let i = 0; i < 20; i++) {
-    const heart = document.createElement("div");
-    heart.className = "explosion-heart";
-    heart.innerText = "❤️";
-    const rect = btn.getBoundingClientRect();
-    heart.style.left = rect.left + rect.width / 2 + "px";
-    heart.style.top = rect.top + "px";
-    heart.style.setProperty("--x", (Math.random() * 200 - 100) + "px");
-    heart.style.setProperty("--y", (Math.random() * -200) + "px");
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1000);
+  function showScreen(from, to) {
+    from.classList.remove("active");
+    to.classList.add("active");
   }
-}
+
+  function placeNoBtnInitial() {
+    // Place it near the YES button area at start
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2 + 80;
+    noBtn.style.left = (centerX + 90) + "px";
+    noBtn.style.top  = (centerY) + "px";
+  }
+
+  function clamp(val, min, max) { return Math.min(Math.max(val, min), max); }
+
+  function moveNoBtnRandom() {
+    const padding = 16;
+    const btnW = noBtn.offsetWidth || 220;
+    const btnH = noBtn.offsetHeight || 50;
+
+    const x = Math.random() * (window.innerWidth  - btnW - padding * 2) + padding;
+    const y = Math.random() * (window.innerHeight - btnH - padding * 2) + padding;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top  = y + "px";
+  }
+
+  function bumpSadEmoji() {
+    // After 5 attempts, show and grow more each attempt
+    if (noAttempts < 5) return;
+
+    sadFace.style.opacity = "1";
+
+    const extra = noAttempts - 5;          // 0,1,2,3...
+    const scale = 0.8 + extra * 0.25;      // grows progressively
+    sadFace.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  }
+
+  function registerNoAttempt() {
+    noAttempts += 1;
+    bumpSadEmoji();
+  }
+
+  // Screen 1 -> 2
+  openBtn.addEventListener("click", () => {
+    showScreen(screen1, screen2);
+    // important: noBtn is absolute, so we place it after screen2 is visible
+    setTimeout(placeNoBtnInitial, 0);
+  });
+
+  // YES -> final
+  yesBtn.addEventListener("click", () => {
+    showScreen(screen2, screen3);
+    startFallingHearts();
+  });
+
+  // Make NO impossible: count attempts + move away
+  // pointerenter covers mouse hover + some touch/pen cases
+  noBtn.addEventListener("pointerenter", () => {
+    registerNoAttempt();
+    moveNoBtnRandom();
+  });
+
+  // also catch click/tap attempts (mobile)
+  noBtn.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    registerNoAttempt();
+    moveNoBtnRandom();
+  });
+
+  window.addEventListener("resize", () => {
+    if (screen2.classList.contains("active")) placeNoBtnInitial();
+  });
+
+  // Love button effects + hearts explosion
+  loveBtn.addEventListener("click", () => {
+    loveBtn.classList.add("glow");
+    loveMessage.style.display = "block";
+    explodeHeartsFromElement(loveBtn);
+    setTimeout(() => loveBtn.classList.remove("glow"), 450);
+  });
+
+  function startFallingHearts() {
+    if (heartsInterval) return;
+    heartsInterval = setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "falling-heart";
+      heart.textContent = Math.random() < 0.5 ? "❤️" : "💗";
+      heart.style.left = (Math.random() * 100) + "vw";
+      heart.style.fontSize = (14 + Math.random() * 18) + "px";
+      heart.style.animationDuration = (2.2 + Math.random() * 3.0) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }, 220);
+  }
+
+  function explodeHeartsFromElement(el) {
+    const rect = el.getBoundingClientRect();
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 22; i++) {
+      const h = document.createElement("div");
+      h.className = "explosion-heart";
+      h.textContent = "❤️";
+      h.style.left = originX + "px";
+      h.style.top  = originY + "px";
+
+      const x = (Math.random() * 240 - 120) + "px";
+      const y = (Math.random() * -260) + "px";
+      h.style.setProperty("--x", x);
+      h.style.setProperty("--y", y);
+
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1000);
+    }
+  }
 </script>
 
 </body>
