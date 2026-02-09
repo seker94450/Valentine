@@ -5,57 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💖 Valentine 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  height:100vh;
-  overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  margin:0;height:100vh;overflow:hidden;
+  display:flex;justify-content:center;align-items:center;
   background:linear-gradient(#ffd1dc,#ffe6eb);
   font-family:Poppins,sans-serif
 }
 .screen{display:none;text-align:center;padding:24px}
 .screen.active{display:block}
 
+/* SHAKE SCREEN */
+@keyframes shake {
+  0%,100% { transform: translate(0,0) }
+  10% { transform: translate(-6px, 2px) }
+  20% { transform: translate(6px, -2px) }
+  30% { transform: translate(-6px, -2px) }
+  40% { transform: translate(6px, 2px) }
+  50% { transform: translate(-4px, 2px) }
+  60% { transform: translate(4px, -2px) }
+  70% { transform: translate(-4px, -2px) }
+  80% { transform: translate(4px, 2px) }
+  90% { transform: translate(-2px, 1px) }
+}
+body.shake { animation: shake .55s linear; }
+
 /* ENVELOPPE */
 .envelopeWrap{position:relative;width:240px;height:240px}
 .envelopeHeart{
-  width:220px;height:220px;
-  background:#ffb3c1;
-  transform:rotate(45deg);
-  border-radius:18px;
-  margin:auto;
+  width:220px;height:220px;background:#ffb3c1;
+  transform:rotate(45deg);border-radius:18px;margin:auto;
   box-shadow:0 14px 35px rgba(0,0,0,.18);
   position:relative;
 }
-.envelopeHeart:before,
-.envelopeHeart:after{
-  content:"";
-  position:absolute;
-  width:220px;height:220px;
-  background:#ffb3c1;
-  border-radius:50%
+.envelopeHeart:before,.envelopeHeart:after{
+  content:"";position:absolute;width:220px;height:220px;
+  background:#ffb3c1;border-radius:50%
 }
 .envelopeHeart:before{top:-110px;left:0}
 .envelopeHeart:after{left:-110px;top:0}
 
 .openBtn{
-  position:absolute;
-  inset:0;
-  margin:auto;
-  width:140px;height:44px;
-  border:none;
-  border-radius:999px;
-  background:#ff4d6d;
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 10px 20px rgba(255,77,109,.35);
+  position:absolute;inset:0;margin:auto;
+  width:150px;height:46px;border:none;border-radius:999px;
+  background:#ff4d6d;color:#fff;font-weight:700;
+  cursor:pointer;box-shadow:0 10px 20px rgba(255,77,109,.35);
   transition:transform .15s ease;
 }
 .openBtn:hover{transform:scale(1.05)}
@@ -64,56 +61,101 @@ body{
 h1{
   font-family:"Dancing Script",cursive;
   font-size:clamp(34px,4vw,52px);
-  color:#b3003c;
-  margin:0;
-  line-height:1.15;
+  color:#b3003c;margin:0;line-height:1.15;
   text-shadow:0 2px 0 rgba(255,255,255,.35);
 }
 
 /* BOUTONS */
 .buttons{margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn{
-  padding:14px 22px;
-  font-size:16px;
-  border:none;
-  border-radius:999px;
-  cursor:pointer;
-  font-weight:600;
-  transition:transform .15s ease, box-shadow .15s ease;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
+  padding:14px 22px;font-size:16px;border:none;border-radius:999px;
+  cursor:pointer;font-weight:600;
+  transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  user-select:none;-webkit-tap-highlight-color:transparent;
 }
 .btn:hover{transform:translateY(-1px)}
 #yesBtn{background:#ff4d6d;color:#fff;box-shadow:0 10px 20px rgba(255,77,109,.25)}
 #noBtn{background:#e6e6e6;color:#333;box-shadow:0 10px 20px rgba(0,0,0,.10);position:absolute}
 
+/* YES BONUS at 40 */
+@keyframes pulseGlow {
+  0%,100% { transform: scale(1.05); filter: drop-shadow(0 0 0 rgba(255,77,109,0)); }
+  50% { transform: scale(1.12); filter: drop-shadow(0 0 14px rgba(255,77,109,.7)); }
+}
+#yesBtn.urgent{
+  font-size:19px;
+  padding:16px 28px;
+  animation:pulseGlow .6s ease-in-out infinite;
+}
+
+/* NO BONUS at 60 */
+#noBtn.surrender{
+  background:#ffd6e0;
+  color:#b3003c;
+  font-weight:800;
+  box-shadow:0 12px 24px rgba(255,77,109,.25);
+}
+
 /* EMOJI 😞 */
 #sadFace{
-  position:fixed;
-  left:50%;
-  top:18%;
+  position:fixed;left:50%;top:18%;
   transform:translate(-50%,-50%) scale(.6);
-  font-size:64px;
-  opacity:0;
-  pointer-events:none;
+  font-size:64px;opacity:0;pointer-events:none;
   transition:transform .2s,opacity .2s;
   filter:drop-shadow(0 8px 18px rgba(0,0,0,.15));
   z-index:10;
 }
 
+/* MESSAGE CENTRAL */
+#pleadMsg{
+  position:fixed;left:50%;top:48%;
+  transform:translate(-50%,-50%);
+  padding:14px 18px;border-radius:18px;
+  background:rgba(255,255,255,0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color:#b3003c;font-weight:800;font-size:18px;
+  box-shadow:0 14px 35px rgba(0,0,0,0.12);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  z-index:20;
+}
+#pleadMsg.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1.03);
+}
+
+/* YES CONFETTI MESSAGE */
+#yesHype{
+  position:fixed;
+  left:50%;
+  top:36%;
+  transform:translate(-50%,-50%);
+  font-family:"Dancing Script",cursive;
+  font-size:56px;
+  color:#b3003c;
+  opacity:0;
+  pointer-events:none;
+  z-index:30;
+  text-shadow:0 2px 0 rgba(255,255,255,.35);
+  transition:opacity .25s ease, transform .25s ease;
+}
+#yesHype.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1.05);
+}
+
 /* PHOTO FINAL */
 .valentine-photo{
-  width:280px;          /* ✅ plus grande */
-  height:280px;
+  width:280px;height:280px;
   object-fit:cover;
-  object-position: center 25%; /* ✅ remonte la tête */
+  object-position:center 25%;
   border-radius:50%;
   margin-bottom:20px;
   border:6px solid #ff4d6d;
   box-shadow:0 18px 40px rgba(255,77,109,.45);
   animation:photoPop .8s ease;
 }
-
 @keyframes photoPop{
   from{transform:scale(.7);opacity:0}
   to{transform:scale(1);opacity:1}
@@ -122,65 +164,45 @@ h1{
 /* FINAL */
 .bear{font-size:120px;margin-top:6px}
 #loveBtn{
-  margin-top:18px;
-  padding:14px 26px;
-  font-size:18px;
-  border-radius:999px;
-  border:none;
-  background:#ff4d6d;
-  color:#fff;
-  cursor:pointer;
-  font-weight:700;
+  margin-top:18px;padding:14px 26px;font-size:18px;
+  border-radius:999px;border:none;background:#ff4d6d;color:#fff;
+  cursor:pointer;font-weight:700;
   transition:transform .2s ease, box-shadow .2s ease;
   box-shadow:0 10px 20px rgba(255,77,109,.25);
 }
-#loveBtn.glow{
-  transform:scale(1.15);
-  box-shadow:0 0 28px rgba(255,77,109,.6);
-}
+#loveBtn.glow{transform:scale(1.15);box-shadow:0 0 28px rgba(255,77,109,.6)}
 #loveMessage{
-  margin-top:14px;
-  font-size:26px;
-  color:#b3003c;
-  display:none;
+  margin-top:14px;font-size:26px;color:#b3003c;display:none;
   font-family:"Dancing Script",cursive;
 }
 
 /* COEURS QUI TOMBENT */
 .falling-heart{
-  position:fixed;
-  top:-24px;
-  animation:fall linear infinite;
-  pointer-events:none;
-  z-index:0;
-  opacity:.9;
+  position:fixed;top:-24px;animation:fall linear infinite;
+  pointer-events:none;z-index:0;opacity:.9;
 }
-@keyframes fall{
-  to{transform:translateY(112vh);opacity:0}
-}
+@keyframes fall{to{transform:translateY(112vh);opacity:0}}
 
 /* EXPLOSION COEURS */
 .explosion-heart{
-  position:fixed;
-  animation:explode 1s forwards;
-  pointer-events:none;
-  z-index:60;
+  position:fixed;animation:explode 1s forwards;
+  pointer-events:none;z-index:60;
 }
-@keyframes explode{
-  to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}
-}
+@keyframes explode{to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}}
 </style>
 </head>
 
 <body>
 
 <div id="sadFace">😞</div>
+<div id="pleadMsg"></div>
+<div id="yesHype">YEEEES 💘</div>
 
 <!-- ÉCRAN 1 -->
 <div id="screen1" class="screen active">
   <div class="envelopeWrap">
     <div class="envelopeHeart"></div>
-    <button class="openBtn" id="openBtn">Open me</button>
+    <button class="openBtn" id="openBtn">Ouvre moi</button>
   </div>
 </div>
 
@@ -195,14 +217,10 @@ h1{
 
 <!-- ÉCRAN 3 -->
 <div id="screen3" class="screen">
-
-  <!-- ✅ TA PHOTO ICI (nom exact du fichier GitHub) -->
   <img src="ROMAYSSA.jpeg" alt="Ma Valentine" class="valentine-photo">
-
   <div class="bear">🧸❤️</div>
   <h1>T'avais pas le choix façon 😌❤️</h1>
-
-  <button id="loveBtn">Je t’aime Princesse ❤️</button>
+  <button id="loveBtn">Je t’aime ❤️</button>
   <div id="loveMessage">Moi aussi, pour toujours 💞</div>
 </div>
 
@@ -216,6 +234,9 @@ const yesBtn=document.getElementById("yesBtn");
 const noBtn=document.getElementById("noBtn");
 
 const sadFace=document.getElementById("sadFace");
+const pleadMsg=document.getElementById("pleadMsg");
+const yesHype=document.getElementById("yesHype");
+
 const loveBtn=document.getElementById("loveBtn");
 const loveMsg=document.getElementById("loveMessage");
 
@@ -247,20 +268,78 @@ function moveNoBtnRandom(){
   noBtn.style.top=y+"px";
 }
 
+function shakeOnce(){
+  document.body.classList.remove("shake");
+  void document.body.offsetWidth;
+  document.body.classList.add("shake");
+  setTimeout(()=>document.body.classList.remove("shake"), 650);
+}
+
+function updatePleadMessage(){
+  if(noAttempts >= 50){
+    pleadMsg.textContent="Ok j’abandonne… nan jrigole 😌";
+    pleadMsg.classList.add("show");
+    shakeOnce();
+  } else if(noAttempts >= 35){
+    pleadMsg.textContent="Enfaite tu m'aime pas ☹️";
+    pleadMsg.classList.add("show");
+  } else if(noAttempts >= 25){
+    pleadMsg.textContent="Mais pourquoi tu veux pas 😢";
+    pleadMsg.classList.add("show");
+  } else if(noAttempts >= 15){
+    pleadMsg.textContent="T'es sûr de ne pas vouloir ?";
+    pleadMsg.classList.add("show");
+  } else {
+    pleadMsg.classList.remove("show");
+    pleadMsg.textContent="";
+  }
+
+  if(noAttempts >= 40){
+    yesBtn.classList.add("urgent");
+    yesBtn.textContent="CLIQUE ICI 😭❤️";
+  } else {
+    yesBtn.classList.remove("urgent");
+    yesBtn.textContent="Oui, avec plaisir";
+  }
+
+  if(noAttempts >= 60){
+    noBtn.classList.add("surrender");
+    noBtn.textContent="Ok d’accord 😭";
+  } else {
+    noBtn.classList.remove("surrender");
+    noBtn.textContent="Non, j'ai autre chose à faire";
+  }
+}
+
 function bumpSadEmoji(){
   if(noAttempts<5) return;
   sadFace.style.opacity="1";
-
   const extra=noAttempts-5;
-  const rawScale=0.8+extra*0.18;      // croissance douce
-  const scale=Math.min(rawScale,2.0); // ✅ limite max
-
+  const rawScale=0.8+extra*0.18;
+  const scale=Math.min(rawScale,2.0);
   sadFace.style.transform=`translate(-50%,-50%) scale(${scale})`;
 }
 
 function registerNoAttempt(){
   noAttempts++;
   bumpSadEmoji();
+  updatePleadMessage();
+}
+
+function acceptYes(){
+  sadFace.style.opacity="0";
+  sadFace.style.transform="translate(-50%,-50%) scale(0.6)";
+  pleadMsg.classList.remove("show");
+  pleadMsg.textContent="";
+  noAttempts=0;
+
+  yesHype.classList.add("show");
+  fireworkHearts(window.innerWidth/2, window.innerHeight/2);
+  setTimeout(()=>yesHype.classList.remove("show"), 1200);
+
+  s2.classList.remove("active");
+  s3.classList.add("active");
+  startFallingHearts();
 }
 
 noBtn.addEventListener("pointerenter",()=>{
@@ -270,6 +349,11 @@ noBtn.addEventListener("pointerenter",()=>{
 
 noBtn.addEventListener("pointerdown",(e)=>{
   e.preventDefault();
+  if(noAttempts >= 60){
+    // Bonus 60: clicking "Ok d’accord" triggers YES
+    acceptYes();
+    return;
+  }
   registerNoAttempt();
   moveNoBtnRandom();
 });
@@ -278,16 +362,7 @@ window.addEventListener("resize",()=>{
   if(s2.classList.contains("active")) placeNoBtnInitial();
 });
 
-yesBtn.addEventListener("click",()=>{
-  // ✅ cacher et reset l'emoji
-  sadFace.style.opacity="0";
-  sadFace.style.transform="translate(-50%,-50%) scale(0.6)";
-  noAttempts=0;
-
-  s2.classList.remove("active");
-  s3.classList.add("active");
-  startFallingHearts();
-});
+yesBtn.addEventListener("click", acceptYes);
 
 loveBtn.addEventListener("click",()=>{
   loveBtn.classList.add("glow");
@@ -312,20 +387,23 @@ function startFallingHearts(){
 
 function explodeHeartsFromElement(el){
   const rect=el.getBoundingClientRect();
-  const originX=rect.left+rect.width/2;
-  const originY=rect.top+rect.height/2;
+  fireworkHearts(rect.left+rect.width/2, rect.top+rect.height/2);
+}
 
-  for(let i=0;i<22;i++){
+function fireworkHearts(originX, originY){
+  for(let i=0;i<34;i++){
     const heart=document.createElement("div");
     heart.className="explosion-heart";
-    heart.textContent="❤️";
+    heart.textContent=(Math.random()<0.7)?"❤️":"💗";
     heart.style.left=originX+"px";
     heart.style.top=originY+"px";
 
-    const x=(Math.random()*240-120)+"px";
-    const y=(Math.random()*-260)+"px";
+    const x=(Math.random()*320-160)+"px";
+    const y=(Math.random()*-340)+"px";
     heart.style.setProperty("--x",x);
     heart.style.setProperty("--y",y);
+
+    heart.style.fontSize=(14+Math.random()*16)+"px";
 
     document.body.appendChild(heart);
     setTimeout(()=>heart.remove(),1000);
