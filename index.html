@@ -30,7 +30,8 @@ body{
   transform:rotate(45deg);
   border-radius:18px;
   margin:auto;
-  box-shadow:0 14px 35px rgba(0,0,0,.18)
+  box-shadow:0 14px 35px rgba(0,0,0,.18);
+  position:relative;
 }
 .envelopeHeart:before,
 .envelopeHeart:after{
@@ -54,28 +55,37 @@ body{
   color:#fff;
   font-weight:600;
   cursor:pointer;
-  box-shadow:0 10px 20px rgba(255,77,109,.35)
+  box-shadow:0 10px 20px rgba(255,77,109,.35);
+  transition:transform .15s ease;
 }
+.openBtn:hover{transform:scale(1.05)}
 
 /* TEXTE */
 h1{
   font-family:"Dancing Script",cursive;
-  font-size:46px;
-  color:#b3003c
+  font-size:clamp(34px,4vw,52px);
+  color:#b3003c;
+  margin:0;
+  line-height:1.15;
+  text-shadow:0 2px 0 rgba(255,255,255,.35);
 }
 
 /* BOUTONS */
-.buttons{margin-top:22px;display:flex;gap:12px;justify-content:center}
+.buttons{margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn{
   padding:14px 22px;
   font-size:16px;
   border:none;
   border-radius:999px;
   cursor:pointer;
-  font-weight:600
+  font-weight:600;
+  transition:transform .15s ease, box-shadow .15s ease;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
-#yesBtn{background:#ff4d6d;color:#fff}
-#noBtn{background:#e6e6e6;color:#333;position:absolute}
+.btn:hover{transform:translateY(-1px)}
+#yesBtn{background:#ff4d6d;color:#fff;box-shadow:0 10px 20px rgba(255,77,109,.25)}
+#noBtn{background:#e6e6e6;color:#333;box-shadow:0 10px 20px rgba(0,0,0,.10);position:absolute}
 
 /* EMOJI 😞 */
 #sadFace{
@@ -87,11 +97,28 @@ h1{
   opacity:0;
   pointer-events:none;
   transition:transform .2s,opacity .2s;
-  z-index:10
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.15));
+  z-index:10;
+}
+
+/* PHOTO FINAL */
+.valentine-photo{
+  width:220px;
+  height:220px;
+  object-fit:cover;
+  border-radius:50%;
+  margin-bottom:18px;
+  border:5px solid #ff4d6d;
+  box-shadow:0 15px 35px rgba(255,77,109,.40);
+  animation:photoPop .8s ease;
+}
+@keyframes photoPop{
+  from{transform:scale(.7);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 
 /* FINAL */
-.bear{font-size:120px}
+.bear{font-size:120px;margin-top:6px}
 #loveBtn{
   margin-top:18px;
   padding:14px 26px;
@@ -102,30 +129,40 @@ h1{
   color:#fff;
   cursor:pointer;
   font-weight:700;
-  transition:.3s
+  transition:transform .2s ease, box-shadow .2s ease;
+  box-shadow:0 10px 20px rgba(255,77,109,.25);
 }
-#loveBtn.glow{transform:scale(1.15);box-shadow:0 0 28px pink}
+#loveBtn.glow{
+  transform:scale(1.15);
+  box-shadow:0 0 28px rgba(255,77,109,.6);
+}
 #loveMessage{
   margin-top:14px;
   font-size:26px;
   color:#b3003c;
   display:none;
-  font-family:"Dancing Script",cursive
+  font-family:"Dancing Script",cursive;
 }
 
-/* COEURS */
+/* COEURS QUI TOMBENT */
 .falling-heart{
   position:fixed;
   top:-24px;
   animation:fall linear infinite;
-  pointer-events:none
+  pointer-events:none;
+  z-index:0;
+  opacity:.9;
 }
-@keyframes fall{to{transform:translateY(110vh);opacity:0}}
+@keyframes fall{
+  to{transform:translateY(112vh);opacity:0}
+}
 
+/* EXPLOSION COEURS */
 .explosion-heart{
   position:fixed;
   animation:explode 1s forwards;
-  pointer-events:none
+  pointer-events:none;
+  z-index:60;
 }
 @keyframes explode{
   to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}
@@ -156,89 +193,140 @@ h1{
 
 <!-- ÉCRAN 3 -->
 <div id="screen3" class="screen">
+
+  <!-- ✅ TA PHOTO ICI (nom exact du fichier GitHub) -->
+  <img src="ROMAYSSA.jpeg" alt="Ma Valentine" class="valentine-photo">
+
   <div class="bear">🧸❤️</div>
   <h1>T'avais pas le choix façon 😌❤️</h1>
+
   <button id="loveBtn">Je t’aime ❤️</button>
   <div id="loveMessage">Moi aussi, pour toujours 💞</div>
 </div>
 
 <script>
-const s1=document.getElementById("screen1"),
-s2=document.getElementById("screen2"),
-s3=document.getElementById("screen3"),
-openBtn=document.getElementById("openBtn"),
-yesBtn=document.getElementById("yesBtn"),
-noBtn=document.getElementById("noBtn"),
-sadFace=document.getElementById("sadFace"),
-loveBtn=document.getElementById("loveBtn"),
-loveMsg=document.getElementById("loveMessage");
+const s1=document.getElementById("screen1");
+const s2=document.getElementById("screen2");
+const s3=document.getElementById("screen3");
 
-let noAttempts=0,heartInterval=null;
+const openBtn=document.getElementById("openBtn");
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
 
-openBtn.onclick=()=>{
-  s1.classList.remove("active");
-  s2.classList.add("active");
-  noBtn.style.left="55%";
-  noBtn.style.top="55%";
-};
+const sadFace=document.getElementById("sadFace");
+const loveBtn=document.getElementById("loveBtn");
+const loveMsg=document.getElementById("loveMessage");
 
-function moveNo(){
-  noAttempts++;
-  if(noAttempts>=5){
-    sadFace.style.opacity=1;
-    const scale=Math.min(0.8+(noAttempts-5)*0.18,2);
-    sadFace.style.transform=`translate(-50%,-50%) scale(${scale})`;
-  }
-  noBtn.style.left=Math.random()*70+15+"%";
-  noBtn.style.top=Math.random()*60+30+"%";
+let noAttempts=0;
+let heartInterval=null;
+
+function placeNoBtnInitial(){
+  const centerX=window.innerWidth/2;
+  const centerY=window.innerHeight/2+80;
+  noBtn.style.left=(centerX+90)+"px";
+  noBtn.style.top=(centerY)+"px";
 }
 
-noBtn.onmouseenter=moveNo;
-noBtn.onpointerdown=e=>{e.preventDefault();moveNo()};
+openBtn.addEventListener("click",()=>{
+  s1.classList.remove("active");
+  s2.classList.add("active");
+  setTimeout(placeNoBtnInitial,0);
+});
 
-yesBtn.onclick=()=>{
-  sadFace.style.opacity=0;
-  sadFace.style.transform="translate(-50%,-50%) scale(.6)";
+function moveNoBtnRandom(){
+  const padding=16;
+  const btnW=noBtn.offsetWidth||220;
+  const btnH=noBtn.offsetHeight||50;
+
+  const x=Math.random()*(window.innerWidth-btnW-padding*2)+padding;
+  const y=Math.random()*(window.innerHeight-btnH-padding*2)+padding;
+
+  noBtn.style.left=x+"px";
+  noBtn.style.top=y+"px";
+}
+
+function bumpSadEmoji(){
+  if(noAttempts<5) return;
+  sadFace.style.opacity="1";
+
+  const extra=noAttempts-5;
+  const rawScale=0.8+extra*0.18;      // croissance douce
+  const scale=Math.min(rawScale,2.0); // ✅ limite max
+
+  sadFace.style.transform=`translate(-50%,-50%) scale(${scale})`;
+}
+
+function registerNoAttempt(){
+  noAttempts++;
+  bumpSadEmoji();
+}
+
+noBtn.addEventListener("pointerenter",()=>{
+  registerNoAttempt();
+  moveNoBtnRandom();
+});
+
+noBtn.addEventListener("pointerdown",(e)=>{
+  e.preventDefault();
+  registerNoAttempt();
+  moveNoBtnRandom();
+});
+
+window.addEventListener("resize",()=>{
+  if(s2.classList.contains("active")) placeNoBtnInitial();
+});
+
+yesBtn.addEventListener("click",()=>{
+  // ✅ cacher et reset l'emoji
+  sadFace.style.opacity="0";
+  sadFace.style.transform="translate(-50%,-50%) scale(0.6)";
   noAttempts=0;
 
   s2.classList.remove("active");
   s3.classList.add("active");
-  startHearts();
-};
+  startFallingHearts();
+});
 
-loveBtn.onclick=()=>{
+loveBtn.addEventListener("click",()=>{
   loveBtn.classList.add("glow");
   loveMsg.style.display="block";
-  explode(loveBtn);
-  setTimeout(()=>loveBtn.classList.remove("glow"),400);
-};
+  explodeHeartsFromElement(loveBtn);
+  setTimeout(()=>loveBtn.classList.remove("glow"),450);
+});
 
-function startHearts(){
-  if(heartInterval)return;
+function startFallingHearts(){
+  if(heartInterval) return;
   heartInterval=setInterval(()=>{
     const h=document.createElement("div");
     h.className="falling-heart";
-    h.innerText=Math.random()<.5?"❤️":"💗";
-    h.style.left=Math.random()*100+"vw";
-    h.style.fontSize=14+Math.random()*18+"px";
-    h.style.animationDuration=2+Math.random()*3+"s";
+    h.textContent=(Math.random()<0.5)?"❤️":"💗";
+    h.style.left=(Math.random()*100)+"vw";
+    h.style.fontSize=(14+Math.random()*18)+"px";
+    h.style.animationDuration=(2.2+Math.random()*3.0)+"s";
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),5000);
+    setTimeout(()=>h.remove(),6000);
   },220);
 }
 
-function explode(btn){
-  const r=btn.getBoundingClientRect();
+function explodeHeartsFromElement(el){
+  const rect=el.getBoundingClientRect();
+  const originX=rect.left+rect.width/2;
+  const originY=rect.top+rect.height/2;
+
   for(let i=0;i<22;i++){
-    const h=document.createElement("div");
-    h.className="explosion-heart";
-    h.innerText="❤️";
-    h.style.left=r.left+r.width/2+"px";
-    h.style.top=r.top+"px";
-    h.style.setProperty("--x",(Math.random()*240-120)+"px");
-    h.style.setProperty("--y",(Math.random()*-260)+"px");
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),1000);
+    const heart=document.createElement("div");
+    heart.className="explosion-heart";
+    heart.textContent="❤️";
+    heart.style.left=originX+"px";
+    heart.style.top=originY+"px";
+
+    const x=(Math.random()*240-120)+"px";
+    const y=(Math.random()*-260)+"px";
+    heart.style.setProperty("--x",x);
+    heart.style.setProperty("--y",y);
+
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),1000);
   }
 }
 </script>
