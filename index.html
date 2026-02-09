@@ -103,15 +103,17 @@ h1{
 
 /* PHOTO FINAL */
 .valentine-photo{
-  width:220px;
-  height:220px;
+  width:280px;          /* ✅ plus grande */
+  height:280px;
   object-fit:cover;
+  object-position: center 25%; /* ✅ remonte la tête */
   border-radius:50%;
-  margin-bottom:18px;
-  border:5px solid #ff4d6d;
-  box-shadow:0 15px 35px rgba(255,77,109,.40);
+  margin-bottom:20px;
+  border:6px solid #ff4d6d;
+  box-shadow:0 18px 40px rgba(255,77,109,.45);
   animation:photoPop .8s ease;
 }
+
 @keyframes photoPop{
   from{transform:scale(.7);opacity:0}
   to{transform:scale(1);opacity:1}
